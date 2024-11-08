@@ -1,29 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:grime/widgets/left_drawer.dart'; // Import LeftDrawer here
+import 'package:grime/widgets/product_card.dart';
+import 'package:grime/screens/product_form.dart';
 
 class MyHomePage extends StatelessWidget {
-    final String npm = '2306275992'; // NPM
-    final String name = 'Ali Al-Uraydhi'; // Nama
-    final String className = 'PBP A'; // Kelas
-    MyHomePage({super.key});
+  final String npm = '2306275052'; // NPM
+  final String name = 'Daniel Ferdiansyah'; // Nama
+  final String className = 'PBP F'; // Kelas
+  MyHomePage({super.key});
+
+  final List<ItemHomepage> items = [
+    ItemHomepage("Lihat Daftar Produk", Icons.add_shopping_cart),
+    ItemHomepage("Tambah Produk", Icons.add),
+    ItemHomepage("Logout", Icons.logout),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Ontastore',
+          'grime',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
+      drawer: const LeftDrawer(), // Adding the left drawer here
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            // Info Cards Row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -33,17 +45,18 @@ class MyHomePage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16.0),
+
+            // Welcome Message and Item Grid
             Center(
               child: Column(
                 children: [
                   const Padding(
                     padding: EdgeInsets.only(top: 16.0),
                     child: Text(
-                      'Welcome to Ontastore.',
+                      'Welcome to grime.',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18.0,
-                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -66,12 +79,6 @@ class MyHomePage extends StatelessWidget {
       ),
     );
   }
-
-    final List<ItemHomepage> items = [
-         ItemHomepage("Lihat Daftar Produk", Icons.add_shopping_cart),
-         ItemHomepage("Tambah Produk", Icons.add),
-         ItemHomepage("Logout", Icons.logout),
-    ];
 }
 
 class InfoCard extends StatelessWidget {
@@ -103,10 +110,10 @@ class InfoCard extends StatelessWidget {
 }
 
 class ItemHomepage {
-    final String name;
-    final IconData icon;
+  final String name;
+  final IconData icon;
 
-    ItemHomepage(this.name, this.icon);
+  ItemHomepage(this.name, this.icon);
 }
 
 class ItemCard extends StatelessWidget {
@@ -119,10 +126,9 @@ class ItemCard extends StatelessWidget {
     Color backgroundColor;
     Color textColor;
 
-    // Customizing colors based on item name
     if (item.name == "Tambah Produk") {
-      backgroundColor = Colors.black;  // Set background color to black
-      textColor = Colors.white;        // Set text color to white
+      backgroundColor = Colors.white;
+      textColor = Colors.black;
     } else if (item.name == "Logout") {
       backgroundColor = Colors.red;
       textColor = Colors.white;
@@ -136,11 +142,20 @@ class ItemCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         onTap: () {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text("Kamu telah menekan tombol ${item.name}!"))
+          if (item.name == "Tambah Produk") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ProductFormPage(),
+              ),
             );
+          } else {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(content: Text("Kamu telah menekan tombol ${item.name}!"))
+              );
+          }
         },
         child: Container(
           padding: const EdgeInsets.all(8),
